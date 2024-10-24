@@ -51,6 +51,13 @@ async function generate_table(shop_id) {
                 table += `<td>${cell}</td>`;
             }
 
+            table += `<td><a href="/admins/edit/${row.id}">Edit</a></td>`;
+            table += `<td>
+                          <form action="/admins/delete/${row.id}" method="POST" style="display:inline;">
+                              <button type="submit" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                          </form>
+                      </td>`;  
+            table += `</tr>`;
         }
         table += `</table>`;
         
@@ -62,29 +69,5 @@ async function generate_table(shop_id) {
     
 }
 
-async function generate_dropdown_list(params) {
-    let dropdown_list = "";
-    try {
-        const query = `SELECT id, shop_name FROM shops;`;
-        const result = await pool.query(query);
-        const rows = result.rows;
-        dropdown_list = `<form action="" method="post">
-            <label for="shop">Choose a shop ID:</label>
-            <select name="shops" id="cars">
-            <option value=1>All shops</option>`;
-        for (let row of rows) {
-            if (row.id > 1) {
-                dropdown_list += `<option value=${row.id}>${row.shop_name}</option>`;
-            }
-        }
-        dropdown_list += `</select>
-                <button type="submit"> Select </button>
-            </form>`;
-    } catch (err) {
-        console.log(err);
-        dropdown_list = "Cannot connect to DB";
-    }
-    return dropdown_list;
-}
 
 module.exports = display_admin_page;
